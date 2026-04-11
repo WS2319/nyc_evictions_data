@@ -36,9 +36,9 @@ on:
       - "main" # Removed the extra set of quotes for standard YAML syntax
 
 env:
-  PROJECT_ID: 'nyc-eviction-updates' # Updated from your main.py configuration
-  REGION: 'us-east1'               # Recommended for NYC-based projects/data
-  SERVICE: 'nyc-eviction-pipeline' # A descriptive name for your Cloud Run service
+  PROJECT_ID: 'nyc-eviction-updates' # Ensure this is your actual ID
+  REGION: 'us-east1'
+  SERVICE: 'nyc-eviction-pipeline'
 
 jobs:
   deploy:
