@@ -33,12 +33,12 @@ name: 'Deploy to Cloud Run from Source'
 on:
   push:
     branches:
-      - '"main"'
+      - "main" # Removed the extra set of quotes for standard YAML syntax
 
 env:
-  PROJECT_ID: 'my-project' # TODO: update to your Google Cloud project ID
-  REGION: 'us-central1' # TODO: update to your region
-  SERVICE: 'my-service' # TODO: update to your service name
+  PROJECT_ID: 'nyc-eviction-updates' # Updated from your main.py configuration
+  REGION: 'us-east1'               # Recommended for NYC-based projects/data
+  SERVICE: 'nyc-eviction-pipeline' # A descriptive name for your Cloud Run service
 
 jobs:
   deploy:
@@ -50,27 +50,25 @@ jobs:
 
     steps:
       - name: 'Checkout'
-        uses: 'actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332' # actions/checkout@v4
+        uses: 'actions/checkout@v4'
 
-      # Configure Workload Identity Federation and generate an access token.
-      #
-      # See https://github.com/google-github-actions/auth for more options,
-      # including authenticating via a JSON credentials file.
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@f112390a2df9932162083945e46d439060d66ec2' # google-github-actions/auth@v2
+        uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider' # TODO: replace with your workload identity provider
+          # Note: You will need to create this Workload Identity Pool in GCP
+          # replacing '123456789' with your actual Project Number
+          workload_identity_provider: 'projects/nyc-eviction-updates/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
 
       - name: 'Deploy to Cloud Run'
-        uses: 'google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17' # google-github-actions/deploy-cloudrun@v2
+        uses: 'google-github-actions/deploy-cloudrun@v2'
         with:
           service: '${{ env.SERVICE }}'
           region: '${{ env.REGION }}'
-          # NOTE: If using a different source folder, update the image name below:
           source: './'
+          # Since your main.py uses a function signature (event, context),
+          # ensure your Cloud Run service is configured to handle the request.
 
-      # If required, use the Cloud Run URL output in later steps
       - name: 'Show output'
         run: |-
           echo ${{ steps.deploy.outputs.url }}
