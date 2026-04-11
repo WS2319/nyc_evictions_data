@@ -58,7 +58,7 @@ jobs:
         with:
           # Note: You will need to create this Workload Identity Pool in GCP
           # replacing '123456789' with your actual Project Number
-          workload_identity_provider: 'projects/nyc-eviction-updates/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+          workload_identity_provider: 'projects/609187627717/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
           service_account: '609187627717-compute@developer.gserviceaccount.com'
         
       - name: 'Deploy to Cloud Run'
